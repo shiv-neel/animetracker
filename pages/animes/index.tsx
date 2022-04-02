@@ -33,7 +33,7 @@ const Index: NextPage<AnimeResponse> = ({ myAnimes }) => {
 			</Heading>
 			<Grid templateColumns={'repeat(5, 1fr)'} pt={5}>
 				{myAnimes.map((a) => (
-					<Link href={'/animes/' + a.id}>
+					<Link href={'/animes/' + a.id} key={a.id}>
 						<a>
 							<AnimeCard key={a.id} data={a} />
 						</a>
@@ -48,7 +48,7 @@ const Index: NextPage<AnimeResponse> = ({ myAnimes }) => {
 }
 
 // runs at build time, not in browser
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
 	var animes: AnimeResponse[] = []
 	for (let i = 0; i < MY_ANIMES.length; i++) {
 		const res = await axios.get(
