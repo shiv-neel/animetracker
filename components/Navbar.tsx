@@ -10,17 +10,17 @@ const Navbar = () => {
 		<Box>
 			<ul className='flex space-x-10 justify-end py-4 px-10 items-center bg-slate-200 shadow-md'>
 				<li className='mr-auto'>Logo</li>
-				<Link href='/animes'>
+				<Link passHref href='/animes'>
 					<li className='cursor-pointer hover:underline'>My Animes</li>
 				</Link>
-				<Link href='/discover'>
+				<Link passHref href='/discover'>
 					<li className='cursor-pointer hover:underline'>Discover</li>
 				</Link>
-				<Link href='/friends'>
+				<Link passHref href='/friends'>
 					<li className='cursor-pointer hover:underline'>Friends</li>
 				</Link>
 				{user ? (
-					<Link href='/account'>
+					<Link passHref href='/account'>
 						{user.photoURL ? (
 							<a>
 								<Image
@@ -28,6 +28,7 @@ const Navbar = () => {
 									src={user.photoURL as string}
 									maxW={16}
 									rounded='xl'
+									alt='avi'
 								/>
 							</a>
 						) : (
@@ -35,7 +36,7 @@ const Navbar = () => {
 						)}
 					</Link>
 				) : (
-					<Link href='/signin'>
+					<Link passHref href='/signin'>
 						<Button colorScheme={'twitter'}>Sign In</Button>
 					</Link>
 				)}

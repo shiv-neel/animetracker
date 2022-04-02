@@ -23,6 +23,7 @@ const AnimeCard: React.FC<CardProps> = ({ data }) => {
 				src={data.image.medium}
 				w={150}
 				className='flex justify-center mx-auto'
+				alt=''
 			/>
 		</Box>
 	)

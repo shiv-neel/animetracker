@@ -28,7 +28,7 @@ const SingleAnimePage: React.FC<PageProps> = ({ anime }) => {
 	return (
 		<Box>
 			<Heading as='h1'>{anime.name}</Heading>
-			<Image src={anime.image.medium} width={150} />
+			<Image src={anime.image.medium} width={150} alt='' />
 			{anime.summary?.substring(3, anime.summary.length - 4)}
 			<Button className='gap-2' onClick={addToMyList}>
 				<FaPlus />
@@ -38,7 +38,7 @@ const SingleAnimePage: React.FC<PageProps> = ({ anime }) => {
 	)
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps = async (ctx: any) => {
 	const id = ctx.params!.id
 	const res = await axios.get(`https://api.tvmaze.com/shows/${id}`)
 	const data: Anime = res.data
@@ -49,7 +49,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 	}
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async () => {
 	var animes: Anime[] = []
 
 	// getting the ids of all animes
