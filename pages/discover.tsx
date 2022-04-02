@@ -1,10 +1,73 @@
-import { Box, Heading } from '@chakra-ui/react'
-import React from 'react'
+import {
+	Box,
+	Button,
+	FormControl,
+	FormHelperText,
+	FormLabel,
+	Heading,
+	Input,
+	InputGroup,
+	InputLeftElement,
+} from '@chakra-ui/react'
+import axios from 'axios'
+import React, { useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
+import ListCard from '../components/discover/ListCard'
+import { Anime } from '../utils/types/anime'
 
 const Discover = () => {
+	const [input, setInput] = useState<string>()
+	const [options, setOptions] = useState<null | Anime[]>()
+
+	const getData = async (e: any) => {
+		e.preventDefault()
+		console.log(input)
+		const res = await axios.get(
+			`https://api.tvmaze.com/search/shows?q=${input}`
+		)
+		const anime = res.data.filter(
+			(sh: { show: { language: string; type: string } }) =>
+				sh.show.language.toUpperCase() === 'JAPANESE' &&
+				sh.show.type.toUpperCase() === 'ANIMATION'
+		)
+		console.log(anime)
+		const options = anime.map((a: { show: Anime }) => a.show)
+		setOptions(options)
+	}
 	return (
-		<Box>
-			<Heading as='h1'>Discover</Heading>
+		<Box className='mx-48'>
+			<Heading as='h1' py={10}>
+				Discover
+			</Heading>
+			<form onSubmit={getData}>
+				<FormLabel htmlFor='search'>Find a new Anime:</FormLabel>
+				<Box className='flex items-center content-center'>
+					<InputGroup>
+						<InputLeftElement>
+							<FaSearch className='text-blue-400' />
+						</InputLeftElement>
+
+						<Input
+							id='search'
+							type='text'
+							onChange={(e) => setInput(e.target.value)}
+							size='md'
+							w={'2xl'}
+						/>
+						<Button type='submit' colorScheme={'twitter'} minWidth={24}>
+							Search
+						</Button>
+					</InputGroup>
+				</Box>
+			</form>
+
+			<Box>
+				<ul>
+					{options?.map((o) => (
+						<ListCard key={o.id} anime={o} />
+					))}
+				</ul>
+			</Box>
 		</Box>
 	)
 }

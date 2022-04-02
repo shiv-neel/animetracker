@@ -7,7 +7,7 @@ import { FaPlus } from 'react-icons/fa'
 import { MY_ANIMES } from '.'
 import { db } from '../../auth/firebase'
 import { useAuth } from '../../auth/user'
-import { Anime } from '../../types/anime'
+import { Anime } from '../../utils/types/anime'
 
 interface PageProps {
 	anime: Anime

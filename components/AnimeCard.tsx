@@ -5,7 +5,7 @@ interface CardProps {
 	data: {
 		id: number
 		image: {
-			medium: string
+			original: string
 		}
 		name: string
 		type: string
@@ -20,7 +20,7 @@ const AnimeCard: React.FC<CardProps> = ({ data }) => {
 				{data.name}: {data.language}
 			</p>
 			<Image
-				src={data.image.medium}
+				src={data.image.original}
 				w={150}
 				className='flex justify-center mx-auto'
 				alt=''

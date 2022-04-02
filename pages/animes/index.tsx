@@ -48,7 +48,7 @@ const Index: NextPage<AnimeResponse> = ({ myAnimes }) => {
 }
 
 // runs at build time, not in browser
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	var animes: AnimeResponse[] = []
 	for (let i = 0; i < MY_ANIMES.length; i++) {
 		const res = await axios.get(
