@@ -8,8 +8,8 @@ import {
 	setDoc,
 	updateDoc,
 } from 'firebase/firestore'
-import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { BsArrowLeft } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
@@ -58,15 +58,14 @@ const SingleAnimePage: React.FC<PageProps> = ({ anime }) => {
 			return animeIds?.find((a) => a === id)
 		}
 	}
+	const router = useRouter()
 
 	return (
 		<Box className='m-10 space-y-10'>
-			<Link href='/animes'>
-				<Button className='gap-2'>
-					<BsArrowLeft />
-					Back
-				</Button>
-			</Link>
+			<Button className='gap-2' onClick={() => router.back()}>
+				<BsArrowLeft />
+				Back
+			</Button>
 			<Heading as='h1'>{anime.name}</Heading>
 			<Box className='flex gap-10'>
 				<Image src={anime.image.medium} width={150} alt='' />
@@ -99,7 +98,7 @@ const SingleAnimePage: React.FC<PageProps> = ({ anime }) => {
 	)
 }
 
-export const getStaticProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: any) => {
 	const id = ctx.params!.id
 	const res = await axios.get(`https://api.tvmaze.com/shows/${id}`)
 	const data: Anime = res.data
@@ -110,22 +109,5 @@ export const getStaticProps = async (ctx: any) => {
 	}
 }
 
-const getAllAnimeIds = async () => {}
-
-export const getStaticPaths = async () => {
-	var paths = []
-	for (let i = 0; i < 200000; i++) {
-		try {
-			const res = await axios.get(`https://api.tvmaze.com/shows/${i}`)
-			if (res) paths.push({ params: { id: i.toString() } })
-		} catch (err) {
-			continue
-		}
-	}
-	return {
-		paths,
-		fallback: false,
-	}
-}
 
 export default SingleAnimePage
