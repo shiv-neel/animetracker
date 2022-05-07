@@ -110,10 +110,13 @@ export const getStaticProps = async (ctx: any) => {
 	}
 }
 
+const getAllAnimeIds = async () => {}
+
 export const getStaticPaths = async () => {
 	var paths = []
 	for (let i = 0; i < 200000; i++) {
-		paths.push({ params: { id: i.toString() } })
+		const res = await axios.get(`https://api.tvmaze.com/shows/${i}`)
+		if (res.data) paths.push({ params: { id: i.toString() } })
 	}
 	return {
 		paths,
