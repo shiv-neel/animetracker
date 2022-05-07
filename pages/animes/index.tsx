@@ -1,15 +1,29 @@
-import { Box, Grid, Heading } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	Divider,
+	Grid,
+	Heading,
+	Skeleton,
+	Stack,
+} from '@chakra-ui/react'
 import axios from 'axios'
+import { arrayRemove, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { db } from '../../auth/firebase'
+import { AuthContext, useAuth } from '../../auth/user'
 import AnimeCard from '../../components/AnimeCard'
+import DummyCard from '../../components/DummyCard'
+import { UserDocData } from '../../utils/helpers/functions'
+import { Anime } from '../../utils/types/anime'
 
 export interface AnimeResponse {
 	myAnimes: {
 		id: number
 		image: {
-			medium: string
+			original: string
 		}
 		name: string
 		type: string
@@ -17,50 +31,70 @@ export interface AnimeResponse {
 	}[]
 }
 
-export const MY_ANIMES = [
-	'code geass',
-	'attack on titan',
-	'erased',
-	'sword art online',
-	'hunter x hunter',
-]
-const Index: NextPage<AnimeResponse> = ({ myAnimes }) => {
+const Index: NextPage<AnimeResponse> = () => {
+	const [myAnimes, setMyAnimes] = useState<Anime[] | void>([])
+	const user = useAuth().user
+	useEffect(() => {
+		const getData = async () => {
+			if (user) {
+				const docRef = doc(db, 'users', user!.uid)
+				const animes = await getDoc(docRef)
+				const res = animes.data() as UserDocData
+				const animeIds = res.animes
+
+				var animeData: Anime[] = []
+				if (animeIds)
+					for (let i = 0; i < animeIds?.length; i++) {
+						const data = await axios.get(
+							`https://api.tvmaze.com/shows/${animeIds[i]}`
+						)
+						animeData.push(data.data)
+					}
+				setMyAnimes(animeData)
+			}
+		}
+		getData()
+	}, [user, myAnimes])
+
 	return (
-		<Box>
-			<Heading as='h1'>My Animes</Heading>
-			<Heading as='h2' size='lg'>
+		<Box className='mx-48'>
+			<Heading as='h1' className='mt-16 mb-10'>
+				My Animes
+			</Heading>
+			<Divider />
+			<Heading as='h2' size='lg' className='my-8'>
 				Currently Watching
 			</Heading>
-			<Grid templateColumns={'repeat(5, 1fr)'} pt={5}>
-				{myAnimes.map((a) => (
-					<Link href={'/animes/' + a.id} key={a.id}>
-						<a>
-							<AnimeCard key={a.id} data={a} />
-						</a>
-					</Link>
-				))}
+			<Grid templateColumns={'repeat(3, 1fr)'} pt={5} gap={5}>
+				{myAnimes ? (
+					<>
+						{myAnimes.map((a) => (
+							<Link href={'/animes/' + a.id} key={a.id}>
+								<a>
+									<AnimeCard key={a.id} data={a} />
+								</a>
+							</Link>
+						))}
+						<DummyCard />
+					</>
+				) : (
+					<>
+						<Stack className='flex'>
+							<Skeleton height='200px' />
+							<Skeleton height='200px' />
+							<Skeleton height='200px' />
+						</Stack>
+					</>
+				)}
 			</Grid>
-			<Heading as='h2' size='lg'>
+			<Heading as='h2' size='lg' className='mt-16 mb-8'>
 				Need to Watch
 			</Heading>
+			<Grid templateColumns={'repeat(3, 1fr)'} pt={5} gap={5}>
+				<DummyCard />
+			</Grid>
 		</Box>
 	)
-}
-
-// runs at build time, not in browser
-export const getServerSideProps = async () => {
-	var animes: AnimeResponse[] = []
-	for (let i = 0; i < MY_ANIMES.length; i++) {
-		const res = await axios.get(
-			`https://api.tvmaze.com/singlesearch/shows?q=${MY_ANIMES[i]}`
-		)
-		animes.push(res.data)
-	}
-	return {
-		props: {
-			myAnimes: animes,
-		},
-	}
 }
 
 export default Index

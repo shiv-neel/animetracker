@@ -8,16 +8,22 @@ const Navbar = () => {
 	const user = useAuth().user
 	return (
 		<Box>
-			<ul className='flex space-x-10 justify-end py-4 px-10 items-center bg-blue-400 shadow-md'>
+			<ul className='flex space-x-10 justify-end py-4 px-10 items-center'>
 				<li className='mr-auto text-lg'>Logo</li>
 				<Link passHref href='/animes'>
-					<li className='cursor-pointer hover:underline text-lg'>My Animes</li>
+					<li className='cursor-pointer hover:scale-105 duration-150 text-lg'>
+						My Animes
+					</li>
 				</Link>
 				<Link passHref href='/discover'>
-					<li className='cursor-pointer hover:underline text-lg'>Discover</li>
+					<li className='cursor-pointer hover:scale-105 duration-150 text-lg'>
+						Discover
+					</li>
 				</Link>
 				<Link passHref href='/friends'>
-					<li className='cursor-pointer hover:underline text-lg'>Friends</li>
+					<li className='cursor-pointer hover:scale-105 duration-150 text-lg'>
+						Friends
+					</li>
 				</Link>
 				{user ? (
 					<Link passHref href='/account'>

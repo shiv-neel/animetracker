@@ -6,7 +6,7 @@ import { FaInfoCircle } from 'react-icons/fa'
 
 const Footer = () => {
 	return (
-		<footer className='flex h-24 bottom-0 left-0 justify-between mx-10 py-10'>
+		<footer className='flex h-24 mt-auto justify-between mx-10 py-10'>
 			<div className='flex items-center gap-3'>
 				<BiCopyright className='text-2xl' />
 				Shiva Neelakantan 2022

@@ -1,6 +1,7 @@
 import {
 	Box,
 	Button,
+	Divider,
 	FormControl,
 	FormHelperText,
 	FormLabel,
@@ -18,10 +19,11 @@ import { Anime } from '../utils/types/anime'
 const Discover = () => {
 	const [input, setInput] = useState<string>()
 	const [options, setOptions] = useState<null | Anime[]>()
+	const [error, setError] = useState<string>('')
 
 	const getData = async (e: any) => {
+		setError('')
 		e.preventDefault()
-		console.log(input)
 		const res = await axios.get(
 			`https://api.tvmaze.com/search/shows?q=${input}`
 		)
@@ -31,18 +33,20 @@ const Discover = () => {
 				sh.show.type.toUpperCase() === 'ANIMATION'
 		)
 		console.log(anime)
+		if (!anime.length) setError(`I couldn't find any Animes named ${input}.`)
 		const options = anime.map((a: { show: Anime }) => a.show)
 		setOptions(options)
 	}
 	return (
 		<Box className='mx-48'>
-			<Heading as='h1' py={10}>
+			<Heading as='h1' className='mt-16 mb-10'>
 				Discover
 			</Heading>
+			<Divider className='mb-8' />
 			<form onSubmit={getData}>
 				<FormLabel htmlFor='search'>Find a new Anime:</FormLabel>
-				<Box className='flex items-center content-center'>
-					<InputGroup>
+				<Box className='flex items-center content-center my-5'>
+					<InputGroup className='gap-5'>
 						<InputLeftElement>
 							<FaSearch className='text-blue-400' />
 						</InputLeftElement>
@@ -53,6 +57,7 @@ const Discover = () => {
 							onChange={(e) => setInput(e.target.value)}
 							size='md'
 							w={'2xl'}
+							placeholder='example: Attack on Titan'
 						/>
 						<Button type='submit' colorScheme={'twitter'} minWidth={24}>
 							Search
@@ -60,7 +65,7 @@ const Discover = () => {
 					</InputGroup>
 				</Box>
 			</form>
-
+			<p className='text-red-400'>{error}</p>
 			<Box>
 				<ul>
 					{options?.map((o) => (

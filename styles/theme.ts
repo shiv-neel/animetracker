@@ -1,9 +1,9 @@
 import { extendTheme } from '@chakra-ui/react'
-import '@fontsource/ibm-plex-sans'
+import '@fontsource/inter'
 
 export const theme = extendTheme({
 	fonts: {
-		heading: 'IBM Plex Sans',
-		body: 'IBM Plex Sans',
+		heading: 'Inter',
+		body: 'Inter',
 	},
 })

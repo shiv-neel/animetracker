@@ -1,6 +1,8 @@
 import { Box, Button, Heading, Image } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
+import { useAuth } from '../../auth/user'
+import { addAnime } from '../../utils/helpers/functions'
 import { CSVArrToString } from '../../utils/helpers/reducer'
 import { Anime } from '../../utils/types/anime'
 
@@ -9,6 +11,7 @@ interface ListCardProps {
 }
 
 const ListCard: React.FC<ListCardProps> = ({ anime }) => {
+	const user = useAuth().user
 	return (
 		<Box
 			className='flex my-10 gap-10 p-4 bg-gray-100 
@@ -28,7 +31,11 @@ const ListCard: React.FC<ListCardProps> = ({ anime }) => {
 				<Link href='/'>
 					<a>Learn More</a>
 				</Link>
-				<Button mr={'auto'} colorScheme={'twitter'}>
+				<Button
+					mr={'auto'}
+					colorScheme={'twitter'}
+					onClick={() => addAnime(user!.uid, anime)}
+				>
 					Add to My List
 				</Button>
 			</Box>
